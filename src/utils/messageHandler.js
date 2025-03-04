@@ -37,33 +37,33 @@ export const messageHandler = {
                 // 3.1 拆分为行
                 const lines = chunk.split('\n').filter(line => line.trim() !== '');
                 for (const line of lines) {
-                    // if (line.includes('data: ')) {
-                    // 3.2 转换为json字符串
-                    const jsonStr = line.replace('data: ', '');
-                    // 检查是否结束
-                    if (jsonStr === '[DONE]') {
-                        console.log('流式响应完成，读取完毕');
-                        continue;
-                    }
-                    // 3.3 转换为js对象
-                    try {
-                        const jsData = JSON.parse(jsonStr);
-                        if (jsData.output.text) {
-                            const content = jsData.output.text;
-                            //3.4 提取出对象中content内容，更新message
-                            fullResponse += content;
-
-                            updateMessage(fullResponse);
+                    if (line.includes('data:')) {
+                        // 3.2 转换为json字符串
+                        const jsonStr = line.replace('data:', '');
+                        // 检查是否结束
+                        if (jsonStr === '[DONE]') {
+                            console.log('流式响应完成，读取完毕');
+                            continue;
                         }
+                        // 3.3 转换为js对象
+                        try {
+                            const jsData = JSON.parse(jsonStr);
+                            if (jsData.output.text) {
+                                const content = jsData.output.text;
+                                //3.4 提取出对象中content内容，更新message
+                                fullResponse = content;
 
-                        // 3.5更新token使用量
-                        if (jsData.usage) {
-                            updateTokenCount(jsData.usage);
+                                updateMessage(fullResponse);
+                            }
+
+                            // 3.5更新token使用量
+                            if (jsData.usage) {
+                                updateTokenCount(jsData.usage);
+                            }
+                        } catch (e) {
+                            // console.error('解析JSON失败:', e);
                         }
-                    } catch (e) {
-                        console.error('解析JSON失败:', e);
                     }
-                    // }
                 }
             }
         } catch (error) {

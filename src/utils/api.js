@@ -49,7 +49,7 @@ export const chatApi = {
             method: 'POST',
             headers: {
                 ...createHeaders(),
-                // ...(stream && { 'Accept': 'text/event-stream' })
+                ...(stream && { 'Accept': 'text/event-stream' })
             },
             body: JSON.stringify(payload)
         })
