@@ -52,7 +52,7 @@ export const messageHandler = {
                             const jsData = JSON.parse(jsonStr);
                             if (jsData.output.thoughts[1]?.response) {
                                 const thought = jsData.output.thoughts[1]?.response;
-                                //3.4 提取出对象中content内容，更新message
+                                //3.4 提取出对象中thoughts内容，更新message
                                 fullResponse = thought;
                                 updateThought(fullResponse);
                             }
