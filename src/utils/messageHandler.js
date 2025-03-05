@@ -7,6 +7,7 @@ export const messageHandler = {
             role,
             content,
             hasImage,
+            thought: '',
             loading: loading,
         };
     },
@@ -16,9 +17,10 @@ export const messageHandler = {
      * @param {Response} response - 响应对象
      * @param {Object} options - 处理选项，这里传入处理消息和token使用量的回调函数。（使用对象提高可读性和可维护性）
         * @param {Function} options.updateMessage - 更新消息内容的回调
+        * @param {Function} options.updateThought - 更新思考内容的回调
         * @param {Function} options.updateTokenCount - 更新token使用量的回调
      */
-    async processStreamResponse(response, { updateMessage, updateTokenCount }) {
+    async processStreamResponse(response, { updateMessage, updateThought, updateTokenCount }) {
         try {
             let fullResponse = '';
             const reader = response.body.getReader();
@@ -48,6 +50,12 @@ export const messageHandler = {
                         // 3.3 转换为js对象
                         try {
                             const jsData = JSON.parse(jsonStr);
+                            if (jsData.output.thoughts[1]?.response) {
+                                const thought = jsData.output.thoughts[1]?.response;
+                                //3.4 提取出对象中content内容，更新message
+                                fullResponse = thought;
+                                updateThought(fullResponse);
+                            }
                             if (jsData.output.text) {
                                 const content = jsData.output.text;
                                 //3.4 提取出对象中content内容，更新message

@@ -29,6 +29,14 @@ export const useChatStore = defineStore('chat', {
             }
         },
 
+        updateLastThought(thought) {
+            if (this.messages.length > 0) {
+                const lastMessage = this.messages[this.messages.length - 1]
+                lastMessage.thought = thought
+                lastMessage.loading = false
+            }
+        },
+
         updateTokenCount(usage) {
             this.tokenCount.prompt += usage.prompt_tokens
             this.tokenCount.completion += usage.completion_tokens

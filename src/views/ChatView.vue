@@ -90,6 +90,7 @@ const handleSend = async (content) => {
             // 流式处理，并更新消息和token计数
             await messageHandler.processStreamResponse(response, {
                 updateMessage: (content) => chatStore.updateLastMessage(content),
+                updateThought: (thought) => chatStore.updateLastThought(thought),
                 updateTokenCount: (usage) => chatStore.updateTokenCount(usage)
             });
         } else {

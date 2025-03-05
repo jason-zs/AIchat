@@ -18,6 +18,19 @@
     <div class="message-content">
       <!-- 显示模式 -->
       <div class="message-text" v-if="!loading && !isEditing">
+        <div v-if="message.role === 'assistant'" class="thinking-process" :class="{ 'expanded': showThinkingProcess }">
+          <div class="toggle-btn" @click="toggleThinkingProcess">
+            {{ showThinkingProcess ? '收起思考过程' : '展开思考过程' }}
+            <el-icon :class="{ 'rotate': showThinkingProcess }"><ArrowDown /></el-icon>
+          </div>
+          <transition name="slide">
+            <div class="process-content" v-show="showThinkingProcess">
+              <div class="process-step">
+                <div class="step-content" v-html="message.thought"></div>
+              </div>
+            </div>
+          </transition>
+        </div>
         <!-- 使用 v-html 渲染 Markdown 内容 -->
         <div class="markdown-body" v-html="renderedContent" ref="markdownBody" @click="handleCodeBlockClick"></div>
       </div>
@@ -89,7 +102,7 @@
 import { computed, ref, nextTick } from 'vue'
 import { renderMarkdown } from '../utils/markdown'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Edit, Delete, RefreshRight, CopyDocument } from '@element-plus/icons-vue'
+import { Edit, Delete, RefreshRight, CopyDocument, ArrowDown } from '@element-plus/icons-vue'
 import { useChatStore } from '../stores/chat'
 
 // 定义组件属性
@@ -114,6 +127,11 @@ const editInputRef = ref(null)
 // 从 store 中获取 loading 状态
 const chatStore = useChatStore()
 const isLoading = computed(() => chatStore.isLoading)
+const showThinkingProcess = ref(true)
+
+const toggleThinkingProcess = () => {
+  showThinkingProcess.value = !showThinkingProcess.value
+}
 
 // 开始编辑
 const startEdit = async () => {
@@ -394,9 +412,95 @@ const handleCopyAll = async () => {
 .message-text {
   background-color: var(--bg-color);
   padding: 1rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  white-space: pre-wrap;
+  position: relative;
+
+  .thinking-process {
+    margin-top: 1rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--bg-color-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-color-secondary);
+      font-size: 0.9rem;
+
+      &:hover {
+        background-color: var(--bg-color-tertiary);
+      }
+
+      .el-icon {
+        transition: transform 0.3s ease;
+        font-size: 0.8rem;
+
+        &.rotate {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .process-content {
+      background-color: var(--bg-color-secondary);
+      padding: 1rem;
+
+      .process-step {
+        margin-bottom: 1rem;
+
+        .step-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+          font-size: 0.85rem;
+
+          .step-index {
+            color: var(--primary-color);
+          }
+
+          .step-type {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+          }
+        }
+
+        .step-content {
+          background-color: var(--bg-color-secondary);
+          border-radius: var(--border-radius);
+          font-size: 0.9rem;
+          line-height: 1.6;
+
+          :deep(pre) {
+            margin: 0.5rem 0;
+            background-color: var(--code-block-bg) !important;
+          }
+        }
+      }
+    }
+
+    &.expanded {
+      .process-content {
+        animation: slideDown 0.3s ease;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 1000px;
+    opacity: 1;
+  }
 }
 
 .message-loading {
