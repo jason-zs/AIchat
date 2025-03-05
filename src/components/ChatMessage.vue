@@ -430,10 +430,6 @@ const handleCopyAll = async () => {
       color: var(--text-color-secondary);
       font-size: 0.9rem;
 
-      &:hover {
-        background-color: var(--bg-color-tertiary);
-      }
-
       .el-icon {
         transition: transform 0.3s ease;
         font-size: 0.8rem;
