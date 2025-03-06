@@ -2,10 +2,10 @@
     <!-- 聊天容器 -->
     <div class="chat-container">
         <!-- 聊天头部，包含标题和设置按钮 -->
-        <div class="chat-header">
+        <!-- <div class="chat-header">
             <h1>AI Chat</h1>
-            <!-- <el-button circle :icon="Setting" @click="showSettings = true" /> -->
-        </div>
+            <el-button circle :icon="Setting" @click="showSettings = true" />
+        </div> -->
 
         <!-- 消息容器，显示对话消息 -->
         <div class="messages-container" ref="messagesContainer">
