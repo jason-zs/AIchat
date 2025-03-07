@@ -19,32 +19,6 @@ export const chatApi = {
             query: messages[messages.length - 1].content,
             // response_mode: "streaming",
             // user: 'user'
-            
-            // parameters: {
-            //     has_thoughts: true
-            // },
-            // debug: {}
-            // model: settingsStore.model,
-            // messages,
-            // temperature: settingsStore.temperature,
-            // max_tokens: settingsStore.maxTokens,
-            // stream,
-            // top_p: 0.7,
-            // top_k: 50,
-            // frequency_penalty: 0.5,
-            // n: 1,
-            // response_format: {
-            //     type: "text"
-            // },
-            // tools: [{
-            //     type: "function",
-            //     function: {
-            //         description: "<string>",
-            //         name: "<string>",
-            //         parameters: {},
-            //         strict: true
-            //     }
-            // }]
         }
 
         const response = await fetch(`${API_BASE_URL}/chatbot/chat-messages`, {

@@ -13,9 +13,9 @@ export const useSettingsStore = defineStore('settings', {
         maxTokens: 1000,
         // 使用的模型名称，默认为 'THUDM/glm-4-9b-chat'
         model: 'THUDM/glm-4-9b-chat',
-        appID: 'ebd787ec14224982843d1446ace03f84',
+        appID: '',
         // API 密钥，默认为空字符串
-        apiKey: 'app-3mRXdIcCUO3vOL4D4MqpFC59',
+        apiKey: '',
         // 是否启用流式响应，默认为 true
         streamResponse: true,
         // Top P 参数

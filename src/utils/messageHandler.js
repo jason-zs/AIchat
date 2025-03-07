@@ -69,19 +69,6 @@ export const messageHandler = {
 
                                 updateMessage(fullResponse);
                             }
-                            // if (jsData.output.thoughts[1]?.response) {
-                            //     const thought = jsData.output.thoughts[1]?.response;
-                            //     //3.4 提取出对象中thoughts内容，更新message
-                            //     fullResponse = thought;
-                            //     updateThought(fullResponse);
-                            // }
-                            // if (jsData.output.text) {
-                            //     const content = jsData.output.text;
-                            //     //3.4 提取出对象中content内容，更新message
-                            //     fullResponse = content;
-
-                            //     updateMessage(fullResponse);
-                            // }
 
                             // 3.5更新token使用量
                             if (jsData.usage) {
