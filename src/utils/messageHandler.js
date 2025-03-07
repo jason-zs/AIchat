@@ -23,6 +23,7 @@ export const messageHandler = {
     async processStreamResponse(response, { updateMessage, updateThought, updateTokenCount }) {
         try {
             let fullResponse = '';
+            let isThought = true;
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             // 1.读取流数据
@@ -50,19 +51,37 @@ export const messageHandler = {
                         // 3.3 转换为js对象
                         try {
                             const jsData = JSON.parse(jsonStr);
-                            if (jsData.output.thoughts[1]?.response) {
-                                const thought = jsData.output.thoughts[1]?.response;
+                            if (jsData.answer && isThought) {
+                                const thought = jsData.answer;
+                                if (thought === '</think>') {
+                                    isThought = false;
+                                    fullResponse = '';
+                                    continue;
+                                }
                                 //3.4 提取出对象中thoughts内容，更新message
-                                fullResponse = thought;
+                                fullResponse += thought;
                                 updateThought(fullResponse);
                             }
-                            if (jsData.output.text) {
-                                const content = jsData.output.text;
+                            if (jsData.answer && !isThought) {
+                                const content = jsData.answer;
                                 //3.4 提取出对象中content内容，更新message
-                                fullResponse = content;
+                                fullResponse += content;
 
                                 updateMessage(fullResponse);
                             }
+                            // if (jsData.output.thoughts[1]?.response) {
+                            //     const thought = jsData.output.thoughts[1]?.response;
+                            //     //3.4 提取出对象中thoughts内容，更新message
+                            //     fullResponse = thought;
+                            //     updateThought(fullResponse);
+                            // }
+                            // if (jsData.output.text) {
+                            //     const content = jsData.output.text;
+                            //     //3.4 提取出对象中content内容，更新message
+                            //     fullResponse = content;
+
+                            //     updateMessage(fullResponse);
+                            // }
 
                             // 3.5更新token使用量
                             if (jsData.usage) {

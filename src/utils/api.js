@@ -1,12 +1,12 @@
 import { useSettingsStore } from '../stores/settings'
 
-const API_BASE_URL = 'https://dashscope.aliyuncs.com/api/v1'
+const API_BASE_URL = 'http://192.168.10.200:5000'
 
 const createHeaders = () => {
     const settingsStore = useSettingsStore()
     return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${settingsStore.apiKey}`
+        // 'Authorization': `Bearer ${settingsStore.apiKey}`
     }
 }
 
@@ -15,13 +15,15 @@ export const chatApi = {
         const settingsStore = useSettingsStore()
         
         const payload = {
-            input: {
-                messages: messages
-            },
-            parameters: {
-                has_thoughts: true
-            },
-            debug: {}
+            // inputs: { },
+            query: messages[messages.length - 1].content,
+            // response_mode: "streaming",
+            // user: 'user'
+            
+            // parameters: {
+            //     has_thoughts: true
+            // },
+            // debug: {}
             // model: settingsStore.model,
             // messages,
             // temperature: settingsStore.temperature,
@@ -45,7 +47,7 @@ export const chatApi = {
             // }]
         }
 
-        const response = await fetch(`${API_BASE_URL}/apps/${settingsStore.appID}/completion`, {
+        const response = await fetch(`${API_BASE_URL}/chatbot/chat-messages`, {
             method: 'POST',
             headers: {
                 ...createHeaders(),
